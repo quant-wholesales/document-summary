@@ -106,7 +106,10 @@ def datastore_service_client() -> datastore.Client:
     return datastore.Client(credentials=__get_credentials())
 
 
-def datastore_create_document(document: dict) -> tuple[datastore.Entity, bool]:
+def datastore_create_document(
+    document: dict,
+    gpt_model: str,
+) -> tuple[datastore.Entity, bool]:
     """
     Creates a new document in Google Cloud Datastore.
 

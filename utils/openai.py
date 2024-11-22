@@ -3,6 +3,7 @@ import openai
 from openai.types.beta import Assistant
 from io import BytesIO
 
+
 def retrieve_assistant() -> Assistant:
     """
     Retrieves the OpenAI assistant.
@@ -17,7 +18,8 @@ def retrieve_assistant() -> Assistant:
 
     return assistant
 
-def summarize_document(file_content: bytes, file_name: str) -> str:
+
+def summarize_document(file_content: bytes, file_name: str, gpt_model: str) -> str:
     """
     Summarizes a document using the OpenAI API.
 
