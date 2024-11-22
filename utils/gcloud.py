@@ -121,7 +121,7 @@ def datastore_create_document(
         bool: A boolean indicating whether the document was created or not.
     """
     client = datastore_service_client()
-    doc_key = client.key("documents", document["file_hash"])
+    doc_key = client.key("documents", f'{document["file_hash"]}-{gpt_model}')
 
     # 1. Check if the document already exists in the datastore
     # If it does not exist, create a new document entity
