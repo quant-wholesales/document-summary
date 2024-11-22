@@ -108,6 +108,7 @@ def datastore_service_client() -> datastore.Client:
 
 def datastore_create_document(
     document: dict,
+    assistant_id: str,
     gpt_model: str,
 ) -> tuple[datastore.Entity, bool]:
     """
@@ -121,7 +122,7 @@ def datastore_create_document(
         bool: A boolean indicating whether the document was created or not.
     """
     client = datastore_service_client()
-    doc_key = client.key("documents", f'{document["file_hash"]}-{gpt_model}')
+    doc_key = client.key("documents", f'{document["file_hash"]}-{assistant_id}-{gpt_model}')
 
     # 1. Check if the document already exists in the datastore
     # If it does not exist, create a new document entity

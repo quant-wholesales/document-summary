@@ -44,7 +44,9 @@ with st.form("awesome form", enter_to_submit=False, clear_on_submit=False):
     uploaded_file = st.file_uploader("Upload a file", accept_multiple_files=False)
     if uploaded_file is not None:
         document = gcloud.storage_create_object(uploaded_file)
-        doc_entity, new_doc_created = gcloud.datastore_create_document(document, gpt_model)
+        doc_entity, new_doc_created = gcloud.datastore_create_document(
+            document, openai_assistant.id, gpt_model
+        )
         if new_doc_created:
             summary = openai.summarize_document(
                 file_content=uploaded_file.getvalue(),

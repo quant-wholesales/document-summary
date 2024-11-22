@@ -54,6 +54,7 @@ def summarize_document(file_content: bytes, file_name: str, gpt_model: str) -> s
     run = client.beta.threads.runs.create_and_poll(
         assistant_id=assistant.id,
         thread_id=thread.id,
+        model=gpt_model,
     )
     run_steps = client.beta.threads.runs.steps.list(thread_id=thread.id, run_id=run.id)
     run_steps = list(run_steps)
