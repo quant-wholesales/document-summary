@@ -1,5 +1,17 @@
+import json
 import streamlit as st
 from utils import gcloud, openai
+import pandas as pd
+
+
+def show_table(documents: list[str]):
+    all_docs = []
+    for doc_name, document in documents:
+        document = document.replace("```json", "")
+        document = document.replace("```", "")
+        all_docs.append({"File": doc_name, **json.loads(document)})
+
+    st.table(all_docs)
 
 
 def set_key_callback(key, value):
@@ -41,8 +53,9 @@ with st.form("awesome form", enter_to_submit=False, clear_on_submit=False):
     with st.expander("Click here to see the full instructions"):
         st.markdown(openai_assistant.instructions)
 
-    uploaded_file = st.file_uploader("Upload a file", accept_multiple_files=False)
-    if uploaded_file is not None:
+    uploaded_files = st.file_uploader("Upload a file", accept_multiple_files=True)
+    documents = []
+    for uploaded_file in uploaded_files:
         document = gcloud.storage_create_object(uploaded_file)
         doc_entity, new_doc_created = gcloud.datastore_create_document(
             document, openai_assistant.id, gpt_model
@@ -56,7 +69,9 @@ with st.form("awesome form", enter_to_submit=False, clear_on_submit=False):
             doc_entity.update({"summary": summary})
             gcloud.datastore_service_client().put(doc_entity)
 
-        if st.session_state.form_submited:
-            st.code(doc_entity.get("summary"), language="markdown", wrap_lines=True)
+        documents.append((uploaded_file.name, doc_entity.get("summary")))
+
+    if st.session_state.form_submited:
+        show_table(documents)
 
     st.form_submit_button("Submit", on_click=set_key_callback("form_submited", True))
